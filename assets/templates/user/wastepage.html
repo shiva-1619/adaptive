@@ -1,0 +1,8 @@
+def test(request, course_id):
+    course = Addcourse.objects.get(pk=course_id)
+    questions = list(Question.objects.filter(course=course).order_by('?')[:10])
+    if len(questions) < 10:
+        additional_questions = list(Question.objects.filter(course=course).exclude(pk__in=[q.pk for q in questions]).order_by('?')[:10 - len(questions)])
+        questions += additional_questions
+    random.shuffle(questions)
+    return render(request, "user/test.html", {'questions': questions, 'course_id': course_id})
